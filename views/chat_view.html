@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chaox</title>
+<link href="http://localhost/chatox/public/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ravi+Prakash" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+<link href="http://localhost/chatox/public/css/style.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<style type="text/css">
+  
+  .modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+}
+
+</style>
+</head>
+<body style="overflow-x: hidden;">
+
+
+<script>
+  var pre_place = "X";
+  var arrow = "noset";
+if(!!window.EventSource) {
+  var source = new EventSource('/chatox/chat/show');
+} else {
+  alert('Something wrong');
+}
+
+
+source.addEventListener('message', function(event) {
+	var data = JSON.parse(event.data);
+		for (var value in data) {
+ 		if (data.hasOwnProperty(value)) {
+      
+      place = data[value].id.charAt(0);
+      msg = data[value].chat_text;
+      name = data[value].user_name;
+
+      create_nodes(name, place, msg);
+      window.scrollTo(0,document.body.scrollHeight);
+		}
+	}
+}, false);
+
+source.addEventListener('message', function(e) {
+  if (e.origin != 'http://localhost') {
+    alert('Origin was not http://localhost');
+    return;
+  }
+}, false);
+
+source.addEventListener('open', function(e) {
+  console.log('Connection Open');
+});
+
+source.addEventListener('error', function(e) {
+  if(e.readyState == EventSource.CLOSED) {
+    console.log('Connection Closed');
+  }
+}, false);
+
+
+window.onload = function() {
+  resetC();
+};
+
+function resetC() {
+"use strict";
+var http = new XMLHttpRequest();
+var url = "set/";
+var params = "set=-1";
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+http.onreadystatechange = function() {
+    if(http.readyState == 4 && http.status == 200) {
+        console.log(http.responseText);
+    }
+}
+http.send(params);
+}
+
+function create_nodes(name, place, msg) {
+      "use strict";
+      var div = document.createElement("div");
+      div.setAttribute("class", "col-md-7 col-md-offset-2 col-xs-12 col-xs-offset-0 info");
+      var span = document.createElement("span");
+      span.setAttribute("class", "name");
+      var namenode = document.createTextNode(name);
+      span.appendChild(namenode);
+      var p = document.createElement("p");
+      p.setAttribute("class", place);
+      var msgnode = document.createTextNode(msg);
+      var msgmeta = document.createTextNode("07:17 PM");
+      var s = document.createElement('div');
+      s.setAttribute('class','time');
+      s.appendChild(msgmeta);
+      p.appendChild(span);
+      p.appendChild(msgnode);
+      p.appendChild(s);
+      div.appendChild(p);
+      document.getElementById("msg").appendChild(div);
+}
+</script>
+
+<nav class="navbar navbar-default navbar-fixed-top" style="background-color: #ffffff;border:none">
+<div class="container">
+<div class="row" style="padding-top: 10px;">
+<div class="col-md-3 col-md-offset-2 col-xs-4 col-xs-offset-0" >
+<button type="button" class="btn-file button-tag" style="background-color: #ffffff;border-radius:50%;" data-toggle="modal" data-target="#gridSystemModal2">
+  <img src="showimage/" style="" width="35"/>
+</button>
+</div>
+<div class="col-md-2 col-xs-6 col-xs-offset-2 col-md-offset-2">
+<ol class="breadcrumb" style="margin-top:7px;background-color:#fff;text-align: right">
+  <li><a class="cust_b t" href="logout/" style="background-color: #dd4814;padding: 10px;border-radius: 2px;">Logout</a></li>
+</ol>
+</div>
+</div>
+</div>
+</nav>
+<div class="container" style="padding-bottom: 100px;padding-top: 100px">
+<div class="row" id="msg" style="padding-left:10px;padding-right: 10px;"></div></div>
+<nav class="navbar navbar-default navbar-fixed-bottom" style="border:none;background-color:#ffffff;">
+<div class="container">
+<div class="row">
+<div class="col-md-7 col-md-offset-2" style="border-top:1px solid #f5f5f5;padding-bottom: 10px;padding-top: 10px;text-align: center;">
+<form method="GET">
+<div class="input-group">
+<textarea id="chat_text" name="chat_text" class="form-control chat-box" placeholder="Type Here" style="height:40px;border:1px solid #d1d1d1;border-radius:2px;resize: none;"></textarea>
+<span class="input-group-btn">
+<button class="btn special btn-default btn-circle" type="button" id="po" style="margin-left:10px;border-radius: 50%;"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></button>
+</span>
+</div>
+</form>
+</div>
+</div>
+</div>
+</nav>
+
+
+<div class="modal fade" id="gridSystemModal2" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel2" style="padding: 0px;">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header" style="border:none;padding-bottom: 10px;padding-top: 10px;">
+
+<div class="container">
+<div class="row" style="padding-top: 10px;">
+<div class="col-md-3 col-md-offset-2 col-xs-4 col-xs-offset-0" >
+
+<button type="button" id="cprofile" style="float: left;" class="close" data-dismiss="modal" aria-label="Close"><img src="http://localhost/chatox/public/img/goback.jpg" width="25" /></button>
+</div>
+<div class="col-md-2 col-xs-6 col-xs-offset-2 col-md-offset-2">
+<button type="button" name="create" class="btn" style="background-color:#fff;padding:0px;float:right;"><img src="http://localhost/chatox/public/img/dropdown.jpg" width="20"/></button>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+<div class="modal-body" style="padding: 0px;padding-right: 5px;">
+<div class="container">
+<div class="row" style="padding-top: 10px;">
+<div class="col-md-1 col-md-offset-2 col-xs-3 col-xs-offset-0" >
+
+<img class="img-circle" src="showimage/" width="55" />
+
+</div>
+<div class="col-md-6 col-xs-9" style="background-color: #f1f1f1;border-radius: 3px;">
+<h5 style="margin-bottom: 0px;">
+<?= $data['group_title']; ?>
+</h5>
+<span style="font-size: 12px;">Created at: </span>
+</div>
+</div>
+</div>
+
+<div class="container">
+<div class="row" style="padding-top: 20px;">
+<div class="col-md-7 col-md-offset-2 col-xs-12 col-xs-offset-0">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Description</a></li>
+    <li role="presentation"><a href="#profile" id="getpeople" aria-controls="profile" role="tab" data-toggle="tab">people</a></li>
+  </ul>
+</div>
+</div>
+<div class="row" style="padding-top: 20px;">
+<div class="col-md-7 col-md-offset-2 col-xs-12 col-xs-offset-0">
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">
+    <?= $data['group_desc'];?>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="profile">
+
+    </div>
+      </div>
+
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="http://localhost/chatox/public/js/jquery.min.js"></script>
+<script src="http://localhost/chatox/public/js/bootstrap.min.js"></script>
+<script src="http://localhost/chatox/public/js/script.js"></script>
+</body>
+</html>
