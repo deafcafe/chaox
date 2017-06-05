@@ -12,17 +12,14 @@ if(isset($_POST['create']))
 		$key = generate_key();
         $verify_image = getimagesize($_FILES['image']['tmp_name']);
 
-        /* Checking MIME Type*/
         $pattern = "#^(image/)[^\s\n<]+$#i";
 
         if(!preg_match($pattern, $verify_image['mime'])){
             die("Only image files are allowed!");
         }
 
-        /* Rename name and extenstion*/
         $upload_file = tempnam_sfx($upload_directory, ".tmp");
 
-        /* Upload the file with new name and extension */
         if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_file)) {
     	    $name = basename($uploadfile);
             $real_name = basename($_FILES['image']['name']);
