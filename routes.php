@@ -2,6 +2,7 @@
 
 /*
 * GET Request Routes.
+* get method accepts end-point and corresponding parameter.
 */
 $router->get('chatox', 'controllers/index.php');
 $router->get('chatox/views', 'controllers/index.php');
